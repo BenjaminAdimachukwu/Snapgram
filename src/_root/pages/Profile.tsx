@@ -7,15 +7,13 @@ import {
   useLocation,
 } from "react-router-dom";
 
-// import { Button } from "@/components/ui";
+
 import { LikedPosts } from "@/_root/pages";
 import { useUserContext } from "@/context/AuthContext";
 import Loader from "@/components/shared/Loader";
 import { Button } from "@/components/ui/button";
 import GridPostList from "@/components/shared/GridPostList";
 import { useGetUserById } from "@/lib/react-query/queriesAndMutations";
-// import { useGetUserById } from "@/lib/react-query/queries";
-// import { GridPostList, Loader } from "@/components/shared";
 
 interface StabBlockProps {
   value: string | number;
@@ -136,7 +134,7 @@ const Profile = () => {
       <Routes>
         <Route
           index
-          element={<GridPostList posts={currentUser.posts} showUser={false} />}
+          element={<GridPostList posts={currentUser.posts} showUser={false} showStats={false} />}
         />
         {currentUser.$id === user.id && (
           <Route path="/liked-posts" element={<LikedPosts />} />

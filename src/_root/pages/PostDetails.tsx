@@ -1,10 +1,11 @@
 import GridPostList from "@/components/shared/GridPostList";
+import Loader from "@/components/shared/Loader";
 import PostStats from "@/components/shared/PostStats";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/AuthContext";
 import { useDeletePost, useGetPostById, useGetUserPosts } from "@/lib/react-query/queriesAndMutations";
 import { multiFormatDateString } from "@/lib/utils";
-import { Loader } from "lucide-react";
+
 
 import { Link, useNavigate, useParams } from "react-router-dom";
 

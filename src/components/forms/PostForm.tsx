@@ -1,4 +1,3 @@
-import React from "react";
 
 ("use client");
 
@@ -19,11 +18,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import FileUploader from "../shared/FileUploader";
 import { PostValidation } from "@/lib/validation";
-import { type } from "os";
 import { Models } from "appwrite";
 import { useCreatePost, useUpdatePost } from "@/lib/react-query/queriesAndMutations";
 import { useUserContext } from "@/context/AuthContext";
-import { toast, useToast } from "../ui/use-toast";
+import { useToast } from "../ui/use-toast";
 import { useNavigate } from "react-router-dom";
 type PostFormProps = {
   post?: Models.Document;
@@ -53,6 +51,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
  async function onSubmit(values: z.infer<typeof PostValidation>) {
 
 if(post && action === 'Update'){
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updatedPost = await updatePost({
     ...values,
     postId: post.$id,

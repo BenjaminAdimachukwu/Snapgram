@@ -12,8 +12,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
-// import { Textarea, Input, Button } from "@/components/ui";
-// import { ProfileUploader, Loader } from "@/components/shared";
 
 import { ProfileValidation } from "@/lib/validation";
 import { useUserContext } from "@/context/AuthContext";
@@ -23,7 +21,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import ProfileUploader from "@/components/shared/ProfileUploader";
-// import { useGetUserById, useUpdateUser } from "@/lib/react-query/queries";
 
 const UpdateProfile = () => {
   const { toast } = useToast();
@@ -43,7 +40,7 @@ const UpdateProfile = () => {
 
   // Queries
   const { data: currentUser } = useGetUserById(id || "");
-  const { mutateAsync: updateUser, isLoading: isLoadingUpdate } =
+  const { mutateAsync: updateUser, isPending: isLoadingUpdate } =
     useUpdateUser();
 
   if (!currentUser)

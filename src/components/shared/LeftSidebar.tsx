@@ -1,4 +1,4 @@
-import React from "react";
+
 import { useEffect } from "react";
 import { Link, useNavigate, NavLink, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
@@ -17,6 +17,7 @@ const LeftSidebar = () => {
     if (isSuccess) {
       navigate(0);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
   return (

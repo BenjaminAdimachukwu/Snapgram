@@ -8,7 +8,6 @@ import {
 import { checkIsLiked } from "@/lib/utils";
 import { Models } from "appwrite";
 import React, { useEffect, useState } from "react";
-import { record } from "zod";
 import Loader from "./Loader";
 
 type PostStatsProps = {
@@ -35,6 +34,7 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
 
   useEffect(() => {
     setIsSaved(savedPostRecord ? true: false)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser])
 
 
