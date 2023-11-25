@@ -58,7 +58,7 @@ if(post && action === 'Update'){
     imageId: post?.imageId,
     imageUrl: post.imageUrl
   })
-  if(!updatePost){
+  if(!updatedPost){
     toast({
       title: 'please try again'
     })

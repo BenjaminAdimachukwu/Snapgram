@@ -1,4 +1,3 @@
-import React from 'react'
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
@@ -38,7 +37,7 @@ const SigninForm = () => {
 })
 
 
-const {mutateAsync: signInAccount, isPending} = useSignInAccount()
+const {mutateAsync: signInAccount} = useSignInAccount()
 
 // 2. Define a submit handler.
 async function onSubmit(values: z.infer<typeof SigninValidation>) {

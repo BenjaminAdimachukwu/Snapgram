@@ -1,4 +1,4 @@
-import React from 'react'
+
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@/components/ui/button"
@@ -25,7 +25,7 @@ import { useUserContext } from '@/context/AuthContext'
 
 const SignupForm = () => {
   const { toast } = useToast()
-  const { checkAuthUser, isLoading: isUserLoading} = useUserContext()
+  const { checkAuthUser} = useUserContext()
   const navigate = useNavigate()
 
  // 1. Define your form.
@@ -40,7 +40,7 @@ const SignupForm = () => {
 })
 
 const {mutateAsync: createUserAccount, isPending: isCreatingAccount} = useCreateAccount()
-const {mutateAsync: signInAccount, isPending: isSigningIn} = useSignInAccount()
+const {mutateAsync: signInAccount} = useSignInAccount()
 
 // 2. Define a submit handler.
 async function onSubmit(values: z.infer<typeof SignupValidation>) {
