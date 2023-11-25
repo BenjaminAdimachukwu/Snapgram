@@ -1,27 +1,62 @@
+import GridPostList from "@/components/shared/GridPostList";
 import PostStats from "@/components/shared/PostStats";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/AuthContext";
-import { useGetPostById } from "@/lib/react-query/queriesAndMutations";
+import { useDeletePost, useGetPostById, useGetUserPosts } from "@/lib/react-query/queriesAndMutations";
 import { multiFormatDateString } from "@/lib/utils";
 import { Loader } from "lucide-react";
-import React from "react";
-import { useParams, Link } from "react-router-dom";
+
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 const PostDetails = () => {
   const { id } = useParams();
   const { user } = useUserContext();
 
-  const handleDeletePost = () => {};
-
+  const navigate = useNavigate();
   const { data: post, isPending } = useGetPostById(id || "");
+
+  const { data: userPosts, isLoading: isUserPostsLoading } = useGetUserPosts(
+    post?.creator.$id
+  );
+
+  const { mutate: deletePost } = useDeletePost();
+
+  const relatedPosts = userPosts?.documents.filter(
+    (userPost) => userPost.$id !== id
+  );
+
+  let modifiedVideoUrl = "";
+
+  if (post?.isVideo) {
+    modifiedVideoUrl =
+      post?.imageUrl.replace(/\/preview\?[^/]+/, "/view") +
+      "?project=654288d943ac85d3021e&mode=admin";
+  }
+
+  const handleDeletePost = () => {
+    deletePost({ postId: id || "", imageId: post?.imageId });
+    navigate(-1);
+  };
+
   return (
-    <div className="Post_details-container">
+    
+<div className="post_details-container">
       {isPending ? (
         <Loader />
       ) : (
         <div className="post_details-card">
-          <img src={post?.imageUrl} alt="post" className="post_details-img" />
-
+          {post?.isVideo ? (
+            <video
+              src={modifiedVideoUrl}
+              muted
+              controls
+              autoPlay
+              autoFocus
+              className="post_details-img"
+            ></video>
+          ) : (
+            <img src={post?.imageUrl} alt="post" className="post_details-img" />
+          )}
           <div className="post_details-info">
             <div className="flex-between w-full">
               <Link
@@ -41,23 +76,21 @@ const PostDetails = () => {
                   <p className="base-medium lg:body-bold text-light-1">
                     {post?.creator.name}
                   </p>
-
                   <div className="flex-center gap-2 text-light-3">
                     <p className="subtle-semibold lg:small-regular">
-                      {multiFormatDateString(post?.$createdAt)}
+                      {multiFormatDateString(post?.$createdAt || "")}
                     </p>
-
-                    <p>-</p>
+                    -
                     <p className="subtle-semibold lg:small-regular">
                       {post?.location}
                     </p>
                   </div>
                 </div>
               </Link>
-
-              <div className=" gap-4">
+              <div className="flex-center">
                 <Link
                   to={`/update-post/${post?.$id}`}
+                  // replace
                   className={`${user.id !== post?.creator.$id && "hidden"}`}
                 >
                   <img
@@ -73,37 +106,51 @@ const PostDetails = () => {
                   variant="ghost"
                   className={`ghost_details-delete_btn ${
                     user.id !== post?.creator.$id && "hidden"
-                  }`}
+                  } `}
                 >
                   <img
                     src="/assets/icons/delete.svg"
-                    alt="delete"
                     width={24}
                     height={24}
+                    alt="delete"
                   />
                 </Button>
               </div>
             </div>
-            <hr className="border w-full border-dark-4/80" />
 
-            <div className="flex flex-col flex-1 w-full small-medium lg:base-rular">
+            <hr className="border w-full border-dark-4/80" />
+            <div className="flex flex-col flex-1 small-medium lg:base-regular">
               <p>{post?.caption}</p>
               <ul className="flex gap-1 mt-2">
                 {post?.tags.map((tag: string) => (
-                  <li key={tag} className="text-light-3">
+                  <li className="text-light-3" key={tag}>
                     #{tag}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="w-full">
-              <PostStats post={post} userId={user.id}/>
 
+            <div className="w-full">
+              <PostStats post={post} userId={user.id} />
             </div>
           </div>
         </div>
       )}
+      {/* <hr className="border w-80 border-dark-4/80 mb-0" /> */}
+      <div className="w-full max-w-5xl">
+        <hr className="border w-full border-dark-4/80" />
+        <h3 className="body-bold md:h3-bold w-full my-10">
+          More related posts
+        </h3>
+        {isUserPostsLoading || !relatedPosts ? (
+          <Loader />
+        ) : (
+          <GridPostList posts={relatedPosts} showStats={false} />
+        )}
+      </div>
     </div>
+
+
   );
 };
 

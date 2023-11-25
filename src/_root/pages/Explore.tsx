@@ -1,17 +1,24 @@
 import GridPostList from '@/components/shared/GridPostList'
+import Loader from '@/components/shared/Loader'
 import SearchResults from '@/components/shared/SearchResults'
 import { Input } from '@/components/ui/input'
 import useDebounce from '@/hooks/useDebounce'
 import { useGetPosts, useSearchPosts } from '@/lib/react-query/queriesAndMutations'
-import { Loader } from 'lucide-react'
-import React, { useState } from 'react'
+
+import React, { useState , useEffect} from 'react'
+import { useInView } from 'react-intersection-observer'
 
 const Explore = () => {
-  const [searchValue, setSearchValue] = useState('')
 
+  const { ref, inView } = useInView()
+  const [searchValue, setSearchValue] = useState('')
 const debouncedValue = useDebounce(searchValue, 500)
   const {data: searchedPosts, isFetching: isSearchFetching} = useSearchPosts(debouncedValue)
   const { data: posts, fetchNextPage, hasNextPage } = useGetPosts()
+
+  useEffect(() => {
+    if(inView && !searchValue) fetchNextPage()
+  },[inView,  searchValue])
 
   if(!posts){
     return (
@@ -63,13 +70,22 @@ const shouldShowPosts = !shouldShowSearchResults && posts.pages.every((item) => 
       </div>
       <div className='flex flex-wrap gap-9 w-full max-w-5xl'>
         {shouldShowSearchResults ? (
-          <SearchResults/>
+          <SearchResults 
+          isSearchFetching={isSearchFetching}
+          searchedPosts={searchedPosts}
+          />
         ): shouldShowPosts ? (
           <p className='text-light-4 mt-10 text-center w-full'>End of posts</p>
         ) : posts.pages.map((item, index)=> (
 
           <GridPostList key={`page-{index}`} posts={item.documents}/>
         ))}
+
+        {hasNextPage && !searchValue && (
+          <div ref={ref} className='mt-10'>
+            <Loader/>
+          </div>
+        )}
 
       </div>
 
