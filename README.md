@@ -22,14 +22,20 @@ Check out the live demo [here](https://snapgram-ten-drab.vercel.app/).
 
 2.
   cd snapgram
+  
 npm install
 
 3. npm start
 
 Tech Stack
-React
-TypeScript
-TailwindCSS
+
+React,
+TypeScript, 
+
+TailwindCSS,
+
 ChadCN: providing pre-built components and utilities
-Apprite for database management, authentication, and storage 
+
+Apprite for database management, authentication, and storage
+
 Tanstack for data fetching, mutation, and caching
